@@ -1,5 +1,11 @@
+import UserResults from '../components/users/UserResults';
+
 const Home = () => {
-    return <h1 className='text-6xl'>Selam</h1>;
+    return (
+        <div>
+            <UserResults />
+        </div>
+    );
 };
 
 export default Home;
