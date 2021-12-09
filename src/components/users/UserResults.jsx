@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import Spinner from '../Layout/Spinner';
+import UserItem from './UserItem';
 
 const UserResults = () => {
     const [users, setUsers] = useState([]);
@@ -16,15 +18,16 @@ const UserResults = () => {
         });
         const data = await res.json();
         setUsers(data);
+        console.log(data);
         setLoading(false);
     };
 
     return loading ? (
-        <div>Loading...</div>
+        <Spinner />
     ) : (
         <div className='grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-8'>
             {users.map((user) => (
-                <p key={user.id}>{user.login}</p>
+                <UserItem key={user.id} user={user} />
             ))}
         </div>
     );
