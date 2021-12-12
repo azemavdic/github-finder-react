@@ -1,24 +1,27 @@
-import { useState, useContext } from "react";
-import GithubContext from "../../context/github/GithubContext";
-import AlertContext from "../../context/alert/AlertContext";
+import { useState, useContext } from 'react'
+import GithubContext from '../../context/github/GithubContext'
+import AlertContext from '../../context/alert/AlertContext'
+import { searchUsers } from '../../context/github/GithubActions'
 
 const UserSearch = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('')
 
-  const { users, searchUsers, resetSearch } = useContext(GithubContext);
-  const { setAlert } = useContext(AlertContext);
+  const { users, dispatch } = useContext(GithubContext)
+  const { setAlert } = useContext(AlertContext)
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
-    if (text === "") {
-      setAlert("Upisite nesto u pretragu.", "error");
+    if (text === '') {
+      setAlert('Upisite nesto u pretragu.', 'error')
     } else {
       //Pretraga korisnika
-      searchUsers(text);
+      dispatch({ type: 'SET_LOADING' })
+      const users = await searchUsers(text)
+      dispatch({ type: 'GET_USERS', payload: users })
+      setText('')
     }
-    setText("");
-  };
+  }
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 mb-8 gap-8'>
@@ -45,13 +48,16 @@ const UserSearch = () => {
       </div>
       {users.length > 0 && (
         <div>
-          <button className='btn btn-ghost btn-lg' onClick={resetSearch}>
+          <button
+            className='btn btn-ghost btn-lg'
+            onClick={() => dispatch({ type: 'RESET_SEARCH' })}
+          >
             Reset
           </button>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default UserSearch;
+export default UserSearch
